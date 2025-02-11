@@ -1,97 +1,70 @@
-#include<iostream>
-#include<type_traits>
-#include<cstdlib>
-#include<cstdio>
-#include<climits>
-#include<vector>
-#include "LinkedList.h"
+#include<bits/stdc++.h>
+using namespace std;
+using namespace chrono;
 
-template<typename type>
-class Hash{
-private:
-    long unsigned int key, pos, items;
-    LinkedList<type> **arr;
-public:
-    //CONSTRUCTOR
-    Hash(long unsigned int _key)
-    {
-        items = 0;
-        if(_key <10)
-            this->key = 1024;
-        key = _key;
-        this->arr = new LinkedList<type>*[key];
-        for(int i = 0; i < key; i++) {
-            arr[i] = new LinkedList<type>;
-        }
-    }
-    Hash()
-    {
-        items = 0;
-        this->key = 1024;
-        this->arr = new LinkedList<type>[key];
-        for(int i = 0; i < key; i++) {
-            arr[i] = new LinkedList<type>;
-        }
-    }
-    //distructor
-    ~Hash()
-    {
-        for(long unsigned int i = 0; i < key; i++)
-            delete arr[i];
-        delete arr;
-    }
+const int MIN = 0;
+const int MAX = 100000000;
 
-    //end Contructor and Distructor
-
-    // insert
-    bool insert(type x)
-    {
-        pos = ((long unsigned int) x) % key;
-        int success = arr[pos]->find(x);
-        if (success != -1)
-            return false;
-        return arr[pos]->insert(x);
-    }
-    bool is_present(type x)
-    {
-        pos = ((long unsigned int)x) % key;
-        int found = arr[pos]->find(x);
-        if(found>=0)
-            return true;
-        
-        return false;
-    }
-    bool del(type x)
-    {
-        pos = ((long unsigned int)x) % key;
-        return arr[pos]->del_data(x);
-    }
-    void display() {
-        cout<<"//table: //"<<endl;
-        for(long unsigned i = 0; i < key; i++) {
-            cout<<i<<" : ";
-            arr[i]->display();
-        }
-        cout<<endl<<"//end//"<<endl;
-    }
+struct Node{
+    int data;
+    Node* next;
 };
 
-int main() {
-    vector<int> arr = {10, -12, 15, 17, 20, 22, 15, 17, 30};
-    Hash<int> lis(11);
-    for (auto i : arr)
-        lis.insert(i);
+bool insert_node(Node* &head, int value){
+    Node* node = new Node();
+    if(node==NULL)
+        return false;
+    node->data=value;
+    if(head==NULL){
+        head=node;
+        node->next=NULL;
+    }
+    else{
+        node->next=head;
+        head=node;
+    }
+    return true;
+}
 
-    lis.display();
-    cout << lis.del(12) << endl;
-    cout << lis.del(9) << endl;
-    cout << lis.is_present(20) << endl;
-    cout << lis.del(3) << endl;
-    lis.display();
-    cout<<lis.del(20)<<endl;
-    cout<<lis.is_present(4)<<endl;
-    cout << lis.is_present(20) << endl;
-    cout << lis.del(15) << endl;
-    lis.display();
+class Hashtable{
+        Node** array; //an array of node pointers/linked lists
+        int len;
+
+    public:
+
+        Hashtable(int n){
+            array = new Node*[n]();
+            len=n;
+        }
+
+        bool insert(int value){
+            int index = (value % len);
+            return insert_node(array[index],value);
+        }
+
+        bool search(int value){
+            int index = (value % len);
+            Node* temp = array[index];
+            while (temp!=NULL){
+                if (temp->data==value)
+                    return true;
+                temp=temp->next;
+            }
+            return false;
+        }
+};
+
+int main(){
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(MIN, MAX);
+    Hashtable H(100);
+    for(int i=0;i<10;i++)
+        H.insert(dist(gen));
+    auto start = high_resolution_clock::now();
+    for(int i=0;i<10000;i++)
+        H.search(dist(gen));
+    auto stop = high_resolution_clock::now();
+    cout << duration_cast<nanoseconds>(stop - start).count() << endl;
     return 0;
 }
