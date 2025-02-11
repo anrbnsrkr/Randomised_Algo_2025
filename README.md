@@ -1,2 +1,2 @@
 # Randomised_Algo_2025
-Just a assignment project if you choose to push somthing my not be accepted
+Use the last 3 files uploaded, two in particular (because one is a .out file)
