@@ -2,15 +2,15 @@
 using namespace std;
 using namespace chrono;
 
-const int MIN = 0;
-const int MAX = 100000000;
+const long long int MIN = 0;
+const long long int MAX = 999999999;
 
 struct Node{
-    int data;
+    long long int data;
     Node* next;
 };
 
-bool insert_node(Node* &head, int value){
+bool insert_node(Node* &head, long long int value){
     Node* node = new Node();
     if(node==NULL)
         return false;
@@ -37,13 +37,13 @@ class Hashtable{
             len=n;
         }
 
-        bool insert(int value){
-            int index = (value % len);
+        bool insert(long long int value){
+            int index = (int)(value % len);
             return insert_node(array[index],value);
         }
 
-        bool search(int value){
-            int index = (value % len);
+        bool search(long long int value){
+            int index = (int)(value % len);
             Node* temp = array[index];
             while (temp!=NULL){
                 if (temp->data==value)
@@ -54,12 +54,12 @@ class Hashtable{
         }
 };
 
-int main(){
+int main(int argc, char* argv[]){
     random_device rd;
     mt19937 gen(rd());
-    uniform_int_distribution<int> dist(MIN, MAX);
-    Hashtable H(100);
-    for(int i=0;i<10;i++)
+    uniform_int_distribution<long long int> dist(MIN, MAX);
+    Hashtable H(97);
+    for(int i=0;i<stoi(argv[1]);i++)
         H.insert(dist(gen));
     auto start = high_resolution_clock::now();
     for(int i=0;i<10000;i++)
