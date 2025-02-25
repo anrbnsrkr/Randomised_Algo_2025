@@ -40,7 +40,7 @@ vector<long int>random_list_of_size(int size)
 }
 
 // Create n permutation of the given vector
-template<typename Type> vector<vector<Type>>n_random_list
+template<typename Type> vector<vector<Type>>n_permute_list
 (vector<Type> &vec, int n, unsigned int seed)
 {
     vector<vector<Type>>z;
