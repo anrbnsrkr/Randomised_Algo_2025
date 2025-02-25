@@ -14,7 +14,7 @@ using namespace std;
 
 int main() {
     vector<long int> arr = random_list_of_size<long int>(50,-1, 0, 100);
-    vector<vector<long int>> z = n_random_list<long int>(arr,3,-1);
+    vector<vector<long int>> z = n_permute_list<long int>(arr,3,-1);
     int count = 0;
     cout<<"The array is: ";
     for(auto i : arr) {
