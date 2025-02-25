@@ -45,7 +45,7 @@ vector<long int>random_list_of_size(int size)
 }
 
 // Create n permutation of the given vector
-template<typename Type> vector<vector<Type>>n_random_list
+template<typename Type> vector<vector<Type>>n_permute_list
 (vector<Type> &vec, int n, unsigned int seed)
 {
     vector<vector<Type>>z;
@@ -78,7 +78,7 @@ template<typename Type> vector<vector<Type>>n_random_list
 
 int main() {
     vector<long int> arr = random_list_of_size<long int>(50,-1, 0, 100);
-    vector<vector<long int>> z = n_random_list<long int>(arr,3,-1);
+    vector<vector<long int>> z = n_permute_list<long int>(arr,3,-1);
     int count = 0;
     cout<<"The array is: ";
     for(auto i : arr) {
