@@ -74,7 +74,7 @@ public:
     //distructor
     ~HashTable()
     {
-        for(long unsigned int i = 0; i < m; i++)
+        for(unsigned long long i = 0; i < m; i++)
             delete arr[i];
         delete F;
         delete arr;
@@ -112,7 +112,7 @@ public:
     }
     void display() {
         cout<<"//table: //"<<endl;
-        for(long unsigned i = 0; i < m; i++) {
+        for(unsigned long long i = 0; i < m; i++) {
             cout<<i<<" : ";
             arr[i]->display();
         }
@@ -142,7 +142,7 @@ public:
 
 int main() {
     vector<int> arr = {11, -12, 15, 17, 20, 22, 15, 17, 30,22,11,24};
-    HashTable<int> lis(13, 12, 7, 41);
+    HashTable<int> lis(13, 12, 7, 19);
     for (auto i : arr)
         lis.insert(i);
 
