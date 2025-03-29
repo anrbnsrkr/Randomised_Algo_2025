@@ -1,37 +1,82 @@
-#pragma once
+#pragma onse
+#include<iostream>
+#include<type_traits>
+#include<cstdlib>
+#include<cstdio>
+#include<climits>
+#include<vector>
+#include<random>
 #include "LinkedListH.cpp"
-template<typename Type>
-class Hash{
+#define max(a,b) ((a > b)? a : b)
+class HashFunction {
 private:
-    long unsigned int key_gen, pos, total_items;
+    unsigned long long a, b, p;
+public:
+    HashFunction(unsigned long long a, unsigned long long b,unsigned long long p) {
+        this->a = a % max(1, p);
+        this->b = b % max(1, p);
+        this->p = p;
+        // cout<<this->a<<", "<<this->b<<", "<<this->p<<endl;
+    }
+    unsigned long long fn(unsigned long long val){
+        return (p == 0)? val : ((a * val) % p + b) % p;
+    }
+};
+
+template<typename Type>
+class HashTable{
+private:
+    unsigned long long  m, pos, total_items;
+    HashFunction *F;
     LinkedList<Type> **arr;
 public:
     //CONSTRUCTOR
-    Hash(long unsigned int _key_gen)
+    HashTable(unsigned long long size, unsigned long long a, unsigned long long b, unsigned long long p)
     {
         total_items = 0;
-        if(_key_gen <10)
-            this->key_gen = 1024;
-        this->key_gen = _key_gen;
-        this->arr = new LinkedList<Type>*[key_gen];
-        for(int i = 0; i < key_gen; i++) {
+        if(size <10)
+            this->m = 1024;
+        else 
+            this->m = size;
+        p = (p > size && a > 0)? p : 0;
+        F = new HashFunction(a,b,p);
+        this->arr = new LinkedList<Type>*[size];
+        for(int i = 0; i < m; i++) {
             arr[i] = new LinkedList<Type>;
         }
     }
-    Hash()
+    HashTable()
+    {
+        F = new HashFunction(0,0,0);
+        total_items = 0;
+        this->m = 1024;
+        this->arr = new LinkedList<Type>[m];
+        for(int i = 0; i < m; i++) {
+            arr[i] = new LinkedList<Type>;
+        }
+    }
+
+    /// @brief 
+    /// @param size 
+    HashTable(unsigned long long size) 
     {
         total_items = 0;
-        this->key_gen = 1024;
-        this->arr = new LinkedList<Type>[key_gen];
-        for(int i = 0; i < key_gen; i++) {
+        if(size <10)
+            this->m = 1024;
+        else 
+            this->m = size;
+        this->F = new HashFunction(0,0,0);
+        this->arr = new LinkedList<Type>*[size];
+        for(int i = 0; i < m; i++) {
             arr[i] = new LinkedList<Type>;
         }
     }
     //distructor
-    ~Hash()
+    ~HashTable()
     {
-        for(long unsigned int i = 0; i < key_gen; i++)
+        for(long unsigned int i = 0; i < m; i++)
             delete arr[i];
+        delete F;
         delete arr;
     }
 
@@ -40,7 +85,7 @@ public:
     // insert
     bool insert(Type x)
     {
-        pos = ((long unsigned int) x) % key_gen;
+        pos = F->fn((unsigned long long) x) % m;
         int success = arr[pos]->find(x);
         if (success != -1)
             return false;
@@ -49,7 +94,7 @@ public:
     }
     bool is_present(Type x)
     {
-        pos = ((long unsigned int)x) % key_gen;
+        pos = F->fn((unsigned long long)x) % m;
         int found = arr[pos]->find(x);
         if(found>=0)
             return true;
@@ -58,7 +103,7 @@ public:
     }
     bool del(Type x)
     {
-        pos = ((long unsigned int)x) % key_gen;
+        pos = F->fn((unsigned long long)x) % m;
         if(arr[pos]->del_data(x)){
             total_items--;
             return true;
@@ -67,7 +112,7 @@ public:
     }
     void display() {
         cout<<"//table: //"<<endl;
-        for(long unsigned i = 0; i < key_gen; i++) {
+        for(long unsigned i = 0; i < m; i++) {
             cout<<i<<" : ";
             arr[i]->display();
         }
@@ -76,8 +121,8 @@ public:
 
     // Get the length of all buckets(all lists)
     vector<int> bucket_size() {
-        vector<int>bsize(key_gen,0);
-        for(int i = 0;i < key_gen;i++) {
+        vector<int>bsize(m,0);
+        for(int i = 0;i < m;i++) {
             bsize[i]=arr[i]->len();
         }
         return bsize;
